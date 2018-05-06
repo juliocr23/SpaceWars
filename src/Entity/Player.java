@@ -73,22 +73,4 @@ public class Player {
 	public void draw(Graphics g) {
 		g.drawImage(player, (int)x, (int)y,width,height, null);
 	}
-
-	public boolean isLeftScreen(){
-
-		return x -dx <= 0;
-	}
-
-	public boolean isRightScreen(){
-		return false;
-	}
-
-	public boolean isDownScreen(){
-		return false;
-	}
-
-	public boolean isTopScreen(){
-		return  false;
-	}
-
 }
