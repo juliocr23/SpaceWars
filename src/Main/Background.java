@@ -24,7 +24,6 @@ public class Background {
 	public Background(String s, double ms) {
 		
 		try {
-			//image = ImageIO.read(getClass().getResourceAsStream(s));   For some reason this wasn't working
 			image = ImageIO.read(new File(s));
 			moveScale = ms;
 		}
