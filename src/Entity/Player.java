@@ -1,13 +1,24 @@
+/***
+ * Things missing:
+ *
+ * Velocity
+ * acceleration
+ * collision
+ * shooting
+ */
+
 package Entity;
+import Main.Game;
+import Main.GamePanel;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
 public class Player {
 
-    BufferedImage player;
+    private BufferedImage player;
 	
 	private double x;
 	private double y;
@@ -16,11 +27,20 @@ public class Player {
 	private boolean moveRight;
 	private boolean moveUp;
 	private boolean moveDown;
-	
-	public Player() {
-	
+	private int width;
+	private int height;
+
+	private int dx = 4;
+	private int dy = 4;
+
+	public Player(int x, int y) {
+
+		this.x = x;
+		this.y = y;
 		try {
 			player = ImageIO.read(new File("Resources/Background/player.png"));
+			width = player.getWidth();
+			height = player.getHeight();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -34,19 +54,41 @@ public class Player {
 	public void moveDown(boolean b) { moveDown = b; }
 	
 	public void update() {
-		
-		if(moveLeft) x -= 4;
-		if(moveRight) x += 4;
-		if(moveUp) y -= 4;
-		if(moveDown) y += 4;
-		
+
+
+		if(moveLeft &&(x-dx)>0)							 //Move to the left as long as
+			x -= dx;									  // it is not at the left end of the screen
+
+		if(moveRight && (x+dx)<(GamePanel.WIDTH-width))   //Move to the right as long as it is not at the right
+			x += dx;                                      //end of the  screen
+
+		if(moveUp && (y-dy)>0)                            //Move up as long as it is not at the above edge of the screen
+			y -= dy;
+
+		if(moveDown && (y+dy)<(GamePanel.HEIGHT-height))  //Move down as long as it not at the below edge of the screen
+			y += dy;
 		
 	}
 	 
 	public void draw(Graphics g) {
-		   
-		g.drawImage(player, (int)x, (int)y, null);
-	      
-
+		g.drawImage(player, (int)x, (int)y,width,height, null);
 	}
+
+	public boolean isLeftScreen(){
+
+		return x -dx <= 0;
+	}
+
+	public boolean isRightScreen(){
+		return false;
+	}
+
+	public boolean isDownScreen(){
+		return false;
+	}
+
+	public boolean isTopScreen(){
+		return  false;
+	}
+
 }

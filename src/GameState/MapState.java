@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 
 import Main.Background;
 import Entity.Player;
+import Main.GamePanel;
 
 public class MapState extends GameState {
 	
@@ -34,7 +35,7 @@ public class MapState extends GameState {
 		bg1.setVector(0, 0.5);
 		
 		
-		player = new Player();
+		player = new Player(GamePanel.WIDTH/2-10,180);
 		
 		
 	}
