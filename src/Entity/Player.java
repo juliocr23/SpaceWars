@@ -56,8 +56,8 @@ public class Player {
 	public void update() {
 
 
-		if(moveLeft &&(x-dx)>0)							 //Move to the left as long as
-			x -= dx;									  // it is not at the left end of the screen
+		if(moveLeft &&(x-dx)>0)                          //Move to the left as long as
+			x -= dx;                                     // it is not at the left end of the screen
 
 		if(moveRight && (x+dx)<(GamePanel.WIDTH-width))   //Move to the right as long as it is not at the right
 			x += dx;                                      //end of the  screen
