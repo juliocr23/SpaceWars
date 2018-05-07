@@ -1,19 +1,23 @@
 package Main;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Game {
-	
 	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("Zero Fighter");
-		window.setContentPane(new GamePanel());
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setResizable(false);
-		window.pack();
-		window.setLocationRelativeTo(null);
-		window.setVisible(true);
+		final  GamePanel game = new GamePanel();
 
+		game.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				game.onWindowClosing();
+			}
+		});
+
+		SwingUtilities.invokeLater(() -> {
+			game.start();
+		});
 	}
 
 }

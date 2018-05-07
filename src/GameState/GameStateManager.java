@@ -1,51 +1,34 @@
 package GameState;
 
-import java.util.ArrayList;
+import java.awt.*;
 
 public class GameStateManager {
 
-	private ArrayList<GameState> gameStates;
-	private int currentState;
-	
-	public static final int MENUSTATE = 0;
-	public static final int MAPSTATE = 1;
-	
+	private GameState state;
+	public static GameState menu;
+	public static GameState map;
+
 	public GameStateManager() {
-		
-		gameStates = new ArrayList<GameState>();
-		
-		currentState = MENUSTATE;
-		gameStates.add(new MenuState(this));
-		gameStates.add(new MapState(this));
-		
+
+		menu = new MenuState(this);
+		map  = new MapState(this);
+		state = menu;
 	}
-	
-	public void setState(int state) {
-		
-		currentState = state;
-		gameStates.get(currentState).init();
-		
+
+	public void setState(GameState other) {
+		state = other;
 	}
-	
+
+	public void processInput(){
+		state.processInput();
+	}
+
 	public void update() {
-		
-		gameStates.get(currentState).update();
-		
+		state.update();
 	}
-	
-	public void draw(java.awt.Graphics g) {
-		
-		gameStates.get(currentState).draw(g);
-		
+
+	public void draw(Graphics g) {
+			state.draw(g);
 	}
-	
-	public void keyPressed(int k) {
-		
-		gameStates.get(currentState).keyPressed(k);
-	}
-	
-	public void keyReleased(int k) {
-		
-		gameStates.get(currentState).keyReleased(k);
-	}
+
 }

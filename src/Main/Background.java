@@ -1,14 +1,11 @@
 package Main;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import Main.GamePanel;
 
 public class Background {
 	
@@ -51,9 +48,10 @@ public class Background {
 	}
 	
 	public void draw(Graphics g) {
-		
 		g.drawImage(image, (int)x, (int)y, null);
-		
-		
+	}
+
+	public void draw(Graphics g, int w, int h){
+		g.drawImage(image, (int)x, (int)y,w,h, null);
 	}
 }

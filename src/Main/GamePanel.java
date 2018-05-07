@@ -1,137 +1,131 @@
 package Main;
-
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-
 import GameState.GameStateManager;
 
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
+import javax.swing.*;
+
 @SuppressWarnings("serial")
-public class GamePanel extends JPanel implements Runnable, KeyListener {
-	
-	  // dimensions
-	
-		public static final int WIDTH = 320;
-		public static final int HEIGHT = 240;
-		public static final int SCALE = 2;
-		
-		// game thread
-		
-		private Thread thread;
-		private boolean running;
-		private int FPS = 60;
-		private long targetTime = 1000 / FPS;
-		
-		// image
-		
-		private BufferedImage image;
-		private Graphics2D g;
-		
-		// game state manager
-		
-		private GameStateManager gsm;
-		
-		public GamePanel() {
-			
-			super();
-			setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-			setFocusable(true);
-			requestFocus();
-		}
-		
-		public void addNotify() {
-			
-			super.addNotify();
-			if(thread == null) {
-				thread = new Thread(this);
-				addKeyListener(this);
-				thread.start();
-			}
-		}
-		
-		public void init() {
-			
-			image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-			g = (Graphics2D) image.getGraphics();
-			
-			running = true;
-			
-			gsm = new GameStateManager();
-		}
-		
-		public void run() {
-			
-			init();
-			
-			long start;
-			long elapsed;
-			long wait;
-			
-			// game loop
-			
-			while(running) {
-				
-				start = System.nanoTime();
-				
+public class GamePanel extends JFrame implements Runnable {
+
+	public static KeyboardInput input;
+
+	private BufferStrategy bs;                 //Use for page flipping or double
+
+	// dimensions
+	public static final int WIDTH = 320*2;
+	public static final int HEIGHT = 240*2;
+
+	// game thread
+	private Thread thread;
+	private boolean running;
+	private Canvas canvas;
+
+	// image
+	private BufferedImage image;
+	private Graphics2D g;
+
+	// game state manager
+	private GameStateManager gsm;
+
+	public void start() {
+
+		//Setup the canvas
+		canvas = new Canvas();
+		canvas.setSize(WIDTH, HEIGHT);
+		canvas.setBackground(Color.WHITE);
+		canvas.setIgnoreRepaint(true);
+
+		//Add keyboard listener to the canvas
+		input = new KeyboardInput();
+		canvas.addKeyListener(input);
+
+		getContentPane().add(canvas);
+		setTitle("Zero Fighter");
+		setIgnoreRepaint(true);
+		setResizable(false);
+		pack();
+
+		setLocationRelativeTo(null);
+		setVisible(true);
+
+		canvas.createBufferStrategy(2);
+		bs = canvas.getBufferStrategy();
+		canvas.requestFocus();
+
+		gsm = new GameStateManager();
+
+		thread = new Thread(this);
+		thread.start();
+	}
+
+	public void run() {
+
+		running = true;
+
+		double timePerTick= 1.0E9/60;
+		double delta = 0;
+
+		long start  = System.nanoTime();
+		long end    = start;
+
+		while (running) {
+
+			start = System.nanoTime();
+			delta += (start-end)/timePerTick;    //Calculate target 60 fps
+			end = start;
+
+			//Make sure to run the program 60 fps
+			if(delta >= 1) {
+				processInput();
 				update();
-				draw();
-				drawToScreen();
-				
-				elapsed = System.nanoTime() - start;
-				
-				wait = targetTime - elapsed / 1000000;
-				
-				if(wait < 0) {
-					wait = 5;
-				}
-				
-				try {
-					Thread.sleep(wait);
-				}
-				catch(Exception e) {
-					e.printStackTrace();
-				}
+				renderFrame();
+				delta--;
 			}
 		}
-		
-		private void update() {
-			
-			gsm.update();
-		}
-		
-		private void draw() {
-			
-			gsm.draw(g);
-		}
-		
-		private void drawToScreen() {
-			
-			Graphics g2 = getGraphics();
-			g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
-			g2.dispose();	
-		}
+	}
 
-		@Override
-		public void keyPressed(KeyEvent key) {
-			
-			gsm.keyPressed(key.getKeyCode());	
-		}
+	private void processInput(){
+		input.poll();
+		gsm.processInput();
 
-		@Override
-		public void keyReleased(KeyEvent key) {
-			
-			gsm.keyReleased(key.getKeyCode());
-		}
+	}
 
-		@Override
-		public void keyTyped(KeyEvent key) {
-			// TODO Auto-generated method stub
-			
+	private void update() {
+		gsm.update();
+	}
+
+	private void draw(Graphics g) {
+		gsm.draw(g);
+	}
+
+	protected void renderFrame() {
+		do {
+			do {
+				Graphics g = null;
+				try {
+					g = bs.getDrawGraphics();
+					g.clearRect(0, 0, getWidth(), getHeight());
+					draw(g);
+				} finally {
+					if (g != null) {
+						g.dispose();
+					}
+				}
+			} while (bs.contentsRestored());
+			bs.show();
+		} while (bs.contentsLost());
+	}
+
+	public  void onWindowClosing() {
+		try {
+			running = false;
+			thread.join();
+		} catch( InterruptedException e ) {
+			e.printStackTrace();
 		}
+		System.exit( 0 );
+	}
 }
