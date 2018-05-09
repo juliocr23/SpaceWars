@@ -17,6 +17,7 @@ public class GamePanel extends JFrame implements Runnable {
 	// dimensions
 	public static final int WIDTH = 320*2;
 	public static final int HEIGHT = 240*2;
+	public static final int SCALE = 2;
 
 	// game thread
 	private Thread thread;

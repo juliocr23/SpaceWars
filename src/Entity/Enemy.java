@@ -65,10 +65,13 @@ public class Enemy extends Rectangle{
 	public void draw(Graphics g) {
 		g.drawImage(enemy, (int)x, (int)y,50,100, null);
 
+		/*
 		for(int i = 0; i<= counter; i++){
 			rightMissile[i].draw(g);
 			leftMissile[i].draw(g);
+			
 		}
+		*/
 	}
 	
 	public double getWidth() {

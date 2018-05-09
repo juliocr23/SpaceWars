@@ -6,7 +6,6 @@ public class GameStateManager {
 
 	private GameState[] gameStates;
 	private int currentState;
-	private GameState state;
 	
 	private int score;
 	
@@ -47,15 +46,15 @@ public class GameStateManager {
 	}
 
 	public void processInput(){
-		state.processInput();
+		gameStates[currentState].processInput();
 	}
 
 	public void update() {
-		state.update();
+		gameStates[currentState].update();
 	}
 
 	public void draw(Graphics g) {
-		state.draw(g);
+		gameStates[currentState].draw(g);
 	}
 
 }

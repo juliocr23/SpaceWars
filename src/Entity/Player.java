@@ -15,14 +15,15 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 
-public class Player {
+public class Player extends Rectangle {
 
     private BufferedImage player;
 	
-	private double x;
-	private double y;
+	//private double x;
+	//private double y;
 	
 	private boolean moveLeft;
 	private boolean moveRight;
@@ -30,20 +31,19 @@ public class Player {
 	private boolean moveDown;
 	private boolean shoot;
 
-	private int width;
-	private int height;
+	//private int width;
+	//private int height;
 
 	private int dx = 4;
 	private int dy = 4;
 
-	private Missile[] rightMissile;
-	private Missile[] leftMissile;
+	private ArrayList<Missile> rightMissile = new ArrayList<Missile>();
+	private ArrayList<Missile> leftMissile = new ArrayList<Missile>();
 	private int counter = -1;
 
 	public Player(int x, int y) {
 
-		this.x = x;
-		this.y = y;
+		super(x,y,0,0);
 
 		try {
 			player = ImageIO.read(new File("Resources/Background/player.png"));
@@ -54,8 +54,6 @@ public class Player {
 			e.printStackTrace();
 		}
 
-		leftMissile = new Missile[1000];
-		rightMissile = new Missile[1000];
 	}
 	
 	public void moveLeft(boolean b) { moveLeft = b; }
@@ -84,13 +82,13 @@ public class Player {
 
 		if(shoot){
 			counter++;
-			rightMissile[counter] = new Missile(x+5,y-3);
-			leftMissile[counter]  = new Missile(x+width-8,y-3);
+			rightMissile.add(new Missile(x+5,y-3));
+			leftMissile.add(new Missile(x+width-8,y-3));
 		}
 
-		for(int i = 0; i<= counter; i++){
-			rightMissile[i].launch();
-			leftMissile[i].launch();
+		for(int i = 0; i< rightMissile.size(); i++){
+			rightMissile.get(i).launch();
+			leftMissile.get(i).launch();
 		}
 		
 	}
@@ -98,9 +96,17 @@ public class Player {
 	public void draw(Graphics g) {
 		g.drawImage(player, (int)x, (int)y,width,height, null);
 
-		for(int i = 0; i<= counter; i++){
-			rightMissile[i].draw(g);
-			leftMissile[i].draw(g);
+		for(int i = 0; i < rightMissile.size(); i++){
+			rightMissile.get(i).draw(g);
+			leftMissile.get(i).draw(g);
 		}
+	}
+	
+	public ArrayList<Missile> getRightMissile() {
+		return rightMissile;
+	}
+	
+	public ArrayList<Missile> getLeftMissile() {
+		return leftMissile;
 	}
 }
