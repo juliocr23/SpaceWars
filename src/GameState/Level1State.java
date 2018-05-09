@@ -9,15 +9,15 @@ import Entity.Player;
 import Main.Game;
 import Main.GamePanel;
 
-public class Level1 extends GameState {
+public class Level1State extends GameState {
 	
 	private Background bg;
 	private Background bg1;
 	
 	private Player player;
 	
-	public Level1(GameStateManager gsm) {
-
+	public Level1State(GameStateManager gsm) {
+		this.gsm = gsm;
 		init();
 	}
 

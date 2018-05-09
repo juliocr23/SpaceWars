@@ -2,11 +2,16 @@ package GameState;
 
 import java.awt.Graphics;
 
-public class Level2 extends GameState {
-
-	public Level2(GameStateManager gsm) {
+public class GameOverState extends GameState {
+	
+	
+	public GameOverState(GameStateManager gsm) {
+		
+		this.gsm = gsm;
+		init();
 		
 	}
+	
 	
 	@Override
 	public void init() {
