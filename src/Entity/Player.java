@@ -14,15 +14,14 @@ import Main.GamePanel;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
-public class Player {
+public class Player extends Rectangle {
 
     private BufferedImage player;
 	
-	private double x;
-	private double y;
+	//private double x;
+	//private double y;
 	
 	private boolean moveLeft;
 	private boolean moveRight;
@@ -30,8 +29,8 @@ public class Player {
 	private boolean moveDown;
 	private boolean shoot;
 
-	private int width;
-	private int height;
+	//private int width;
+	//private int height;
 
 	private int dx = 4;
 	private int dy = 4;
@@ -42,8 +41,7 @@ public class Player {
 
 	public Player(int x, int y) {
 
-		this.x = x;
-		this.y = y;
+		super(x,y,0,0);
 
 		try {
 			player = ImageIO.read(new File("Resources/Background/player.png"));
@@ -102,5 +100,13 @@ public class Player {
 			rightMissile[i].draw(g);
 			leftMissile[i].draw(g);
 		}
+	}
+	
+	public Missile[] getRightMissile() {
+		return rightMissile;
+	}
+	
+	public Missile[] getLeftMissile() {
+		return leftMissile;
 	}
 }
