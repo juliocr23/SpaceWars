@@ -9,14 +9,14 @@ import Entity.Player;
 import Main.Game;
 import Main.GamePanel;
 
-public class MapState extends GameState {
+public class Level1 extends GameState {
 	
 	private Background bg;
 	private Background bg1;
 	
 	private Player player;
 	
-	public MapState(GameStateManager gsm) {
+	public Level1(GameStateManager gsm) {
 
 		init();
 	}
