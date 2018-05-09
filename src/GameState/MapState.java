@@ -40,7 +40,7 @@ public class MapState extends GameState {
 		enemy = new Enemy[60];
 		
 		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(0,0);
+			enemy[i] = new Enemy(0, 0, 1);
 		}
 	}
 		

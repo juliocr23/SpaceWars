@@ -11,6 +11,9 @@ import javax.imageio.ImageIO;
 public class Enemy extends Rectangle{
 
     private BufferedImage enemy;
+    
+    private int health; // Regular enemies have 1 health, bosses can have more
+    private boolean isDead; // to detect when to play explosion
 	
 	//private double x, y;
 	//private int width, height;
@@ -19,16 +22,17 @@ public class Enemy extends Rectangle{
 	private Missile[] leftMissile;
 	private int counter = -1;
 
-	public Enemy(int x, int y) {
+	public Enemy(int x, int y, int health) {
 
 		super(x,y,0,0);
-
+		this.health = health;
 		try {
 			enemy = ImageIO.read(new File("Resources/Background/alien1.png"));
 			//width = enemy.getWidth();
 			//height = enemy.getHeight();
 			width = 50;
 			height = 100;
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
