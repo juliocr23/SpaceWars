@@ -1,4 +1,4 @@
-package Entity;
+package Main;
 
 import java.awt.Image;
 
