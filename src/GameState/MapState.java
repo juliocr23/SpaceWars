@@ -51,11 +51,12 @@ public class MapState extends GameState {
 		
 		if(isCollidingWithMissile() != -1) {
 			//enemy[i].explode();
+			enemy[isCollidingWithMissile()].setToDead();
 			System.out.println("is hit with missle");
 		}
 		
 		if(isCollidingWithPlayer()) {
-			//player.die();
+			player.setToDead();
 			System.out.println("is dead");
 		}
 		
@@ -94,6 +95,8 @@ public class MapState extends GameState {
 		for(int i = 0; i<counter; i++) {
 			if(enemy[i].overlaps(player)) {
 				flag = true;
+				enemy[i].setToDead();
+				player.setToDead();
 				break;
 			}
 		}

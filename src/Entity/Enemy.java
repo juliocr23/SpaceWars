@@ -1,5 +1,6 @@
 package Entity;
 
+import Main.Animation;
 import Main.GamePanel;
 
 import java.awt.Graphics;
@@ -14,6 +15,8 @@ public class Enemy extends Rectangle{
     
     private int health; // Regular enemies have 1 health, bosses can have more
     private boolean isDead; // to detect when to play explosion
+    
+    private Animation explosion;
 	
 	//private double x, y;
 	//private int width, height;
@@ -25,7 +28,12 @@ public class Enemy extends Rectangle{
 	public Enemy(int x, int y, int health) {
 
 		super(x,y,0,0);
+		
+		explosion = new Animation("Resources/explosion/explosion01_", ".png", 38, 1);
+		isDead = false;
+		
 		this.health = health;
+		
 		try {
 			enemy = ImageIO.read(new File("Resources/Background/alien1.png"));
 			//width = enemy.getWidth();
@@ -67,12 +75,24 @@ public class Enemy extends Rectangle{
 	}
 	 
 	public void draw(Graphics g) {
-		g.drawImage(enemy, (int)x, (int)y,50,100, null);
-
-		for(int i = 0; i<= counter; i++){
-			rightMissile[i].draw(g);
-			leftMissile[i].draw(g);
+		if(!explosion.isAnimationOver()) {
+			
+			if(!isDead) {
+				g.drawImage(enemy, (int)x, (int)y,50,100, null);
+			
+				for(int i = 0; i<= counter; i++){
+					rightMissile[i].draw(g);
+					leftMissile[i].draw(g);
+				}
+			}
+			
+			else {
+				g.drawImage(explosion.nextImage(), (int)x, (int)y, null);
+			}
 		}
+		
+
+		
 	}
 	
 	public double getWidth() {
@@ -86,6 +106,10 @@ public class Enemy extends Rectangle{
 	public void setValues(double x, double y) {
 		this.x = (int) x;
 		this.y = (int) y;
+	}
+	
+	public void setToDead() {
+		isDead = true;
 	}
 	
 
