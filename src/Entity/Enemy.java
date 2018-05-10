@@ -70,9 +70,11 @@ public class Enemy extends Rectangle{
 		}
 
 		if(slope > 0){
-			x = (y/slope);
-			y = (x*slope);
+			x = Math.abs(x/slope);
+			y = Math.abs(x*slope);
+			System.out.println(x);
 		}
+
 	}
 	 
 	public void draw(Graphics g) {

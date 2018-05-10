@@ -138,4 +138,8 @@ public class Player extends Rectangle {
 	public boolean isDead() {
 		return isDead;
 	}
+
+	public boolean isMoving(){
+		return moveLeft || moveRight || moveDown || moveUp;
+	}
 }

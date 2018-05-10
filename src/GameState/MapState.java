@@ -43,9 +43,8 @@ public class MapState extends GameState {
 		
 		for(int i= 0; i<enemy.length; i++) {
 			enemy[i] = new Enemy(-10, -10, 1);
+			enemy[i].setSlope(getSlope());
 		}
-
-		enemy[0].setSlope(getSlope());
 	}
 		
 	@Override
@@ -53,17 +52,17 @@ public class MapState extends GameState {
 		
 		player.update();
 
-		//enemy[0].setSlope(getSlope());
-		enemy[0].update();
+		//Change slope if player's move
+		if(player.isMoving()){
+			for(int i = 0; i<counter; i++)
+				enemy[i].setSlope(getSlope());
+		}
 
 
-		//if(isCollidingWithMissile() != -1) {
-			//enemy[isCollidingWithMissile()].setToDead();
-
-		//}
-		
-		if(isCollidingWithPlayer()) {
-			player.setToDead();
+		//Update enemy
+		for(int i = 0; i<counter; i++){
+			if(enemy[i] != null)
+				enemy[i].update();
 		}
 		
 		bg.update();
@@ -93,12 +92,12 @@ public class MapState extends GameState {
 			if(enemy[i] != null) {
 				int w = (int) enemy[i].getWidth();
 				
-				enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
+				//enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
 				enemy[i].draw(g);
 			}
 
 		//	enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
-			enemy[i].draw(g);
+		//	enemy[i].draw(g);
 		}
 
 		g.drawString(""+score,40,40);
@@ -108,13 +107,16 @@ public class MapState extends GameState {
 		boolean flag = false;
 		
 		for(int i = 0; i<counter; i++) {
-			if(enemy[i].overlaps(player)) {
-				flag = true;
-				enemy[i].setToDead();
-				enemy[i] = null;
-				player.setToDead();
-				//player = null;
-				break;
+
+			if(enemy[i] != null) {
+				if (enemy[i].overlaps(player)) {
+					flag = true;
+					enemy[i].setToDead();
+					enemy[i] = null;
+					player.setToDead();
+					player = null;
+					break;
+				}
 			}
 		}
 		
