@@ -70,7 +70,7 @@ public class Enemy extends Rectangle{
 		}
 
 		if(slope > 0){
-			x = Math.abs(x/slope);
+			x += 0.01*Math.abs(y/slope);
 			y = Math.abs(x*slope);
 			System.out.println(x);
 		}
@@ -124,6 +124,9 @@ public class Enemy extends Rectangle{
 	public void setSlope(double m){
 		slope = m;
 	}
-	
+
+	public boolean isAnimationOver(){
+		return explosion.isAnimationOver();
+	}
 
 }

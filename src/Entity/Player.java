@@ -142,4 +142,8 @@ public class Player extends Rectangle {
 	public boolean isMoving(){
 		return moveLeft || moveRight || moveDown || moveUp;
 	}
+
+	public boolean isAnimationOver(){
+		return explosion.isAnimationOver();
+	}
 }

@@ -51,19 +51,17 @@ public class MapState extends GameState {
 	public void update() {
 		
 		player.update();
+		updateEnemy();
 
-		//Change slope if player's move
-		if(player.isMoving()){
-			for(int i = 0; i<counter; i++)
-				enemy[i].setSlope(getSlope());
+		int index  = isCollidingWithPlayer();
+
+		if(index != -1){
+			enemy[index].setToDead();
+			player.setToDead();
 		}
 
-
-		//Update enemy
-		for(int i = 0; i<counter; i++){
-			if(enemy[i] != null)
-				enemy[i].update();
-		}
+		if(player.isAnimationOver())
+			player = null;
 
 		bg.update();
 		if(bg1.y >= 250) bg1.setPosition(0, -1500);
@@ -87,34 +85,22 @@ public class MapState extends GameState {
 		bg1.draw(g);
 		
 		if(!player.isDead()) player.draw(g);
-		for(int i = 0; i<counter; i++) {
-			
-			if(enemy[i] != null) {
-				int w = (int) enemy[i].getWidth();
-				
-				//enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
-				enemy[i].draw(g);
-			}
-
-		//	enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
-		//	enemy[i].draw(g);
+			for(int i = 0; i<counter; i++) {
+				if(enemy[i] != null) {
+					enemy[i].draw(g);
+				}
 		}
 
 		g.drawString(""+score,40,40);
 	}
 	
-	public boolean isCollidingWithPlayer() {
-		boolean flag = false;
+	public int isCollidingWithPlayer() {
+		int flag = -1;
 		
 		for(int i = 0; i<counter; i++) {
-
 			if(enemy[i] != null) {
 				if (enemy[i].overlaps(player)) {
-					flag = true;
-					enemy[i].setToDead();
-					enemy[i] = null;
-					player.setToDead();
-					player = null;
+					flag = i;
 					break;
 				}
 			}
@@ -157,6 +143,33 @@ public class MapState extends GameState {
 
 		return m;
 	}
+
+	private void updateEnemy(){
+
+		//Change slope if player's move
+		if(player.isMoving()){
+			for(int i = 0; i<counter; i++)
+				enemy[i].setSlope(getSlope());
+		}
+
+		//Update enemy
+		for(int i = 0; i<counter; i++){
+			if(enemy[i] != null) {
+				enemy[i].update();
+
+				if(enemy[i].isAnimationOver())
+					enemy[i] = null;
+			}
+		}
+
+		int index = isCollidingWithMissile();
+
+		if(index != -1){
+			enemy[index].setToDead();
+		}
+
+	}
+
 	
 	
 	
