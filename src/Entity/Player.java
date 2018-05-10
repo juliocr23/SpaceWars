@@ -49,7 +49,7 @@ public class Player extends Rectangle {
 
 		super(x,y,0,0);
 		
-		explosion = new Animation("Resources/explosion/explosion01_", ".png", 38, 1);
+		explosion = new Animation("Resources/explosion/explosion_", ".png", 38, 10);
 		
 		
 		
@@ -101,10 +101,6 @@ public class Player extends Rectangle {
 		for(int i = 0; i<= counter; i++){
 			rightMissile[i].launch();
 			leftMissile[i].launch();
-		}
-		
-		if(explosion.isAnimationOver()) {
-			
 		}
 		
 	}

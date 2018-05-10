@@ -18,7 +18,7 @@ public class MapState extends GameState {
 	
 	private Player player;
 	private Enemy enemy[];
-	private int counter = 5;
+	private int counter = 8;
 	
 	public MapState(GameStateManager gsm) {
 
@@ -96,6 +96,7 @@ public class MapState extends GameState {
 			if(enemy[i].overlaps(player)) {
 				flag = true;
 				enemy[i].setToDead();
+				//enemy[i] = null;
 				player.setToDead();
 				break;
 			}
@@ -115,8 +116,7 @@ public class MapState extends GameState {
 			for(int j = 0; j<m1.length; j++) {
 				
 				if(m1[j] != null) {
-					if(m2[j].overlaps(enemy[i])
-							||m1[j].overlaps(enemy[i]) ) {
+					if( m2[j].overlaps(enemy[i]) || m1[j].overlaps(enemy[i]) ) {
 						flag = i;
 						break;
 						

@@ -29,7 +29,7 @@ public class Enemy extends Rectangle{
 
 		super(x,y,0,0);
 		
-		explosion = new Animation("Resources/explosion/explosion01_", ".png", 38, 1);
+		explosion = new Animation("Resources/explosion/explosion_", ".png", 38, 10);
 		isDead = false;
 		
 		this.health = health;
@@ -82,12 +82,14 @@ public class Enemy extends Rectangle{
 			
 				for(int i = 0; i<= counter; i++){
 					rightMissile[i].draw(g);
-					leftMissile[i].draw(g);
+					leftMissile[i].draw(g);	
 				}
 			}
 			
+			
 			else {
 				g.drawImage(explosion.nextImage(), (int)x, (int)y, null);
+				//super.moveBy(2000, 2000);
 			}
 		}
 		
