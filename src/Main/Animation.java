@@ -1,80 +1,146 @@
 package Main;
 
-import java.awt.Image;
-import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
-
-// 	The animation class manages a series of images (frames) and the amount of time to display each frame
+//png for sprites
 public class Animation {
-	
-	private ArrayList frames;
-	private int currentFrameIndex;
-	private long animTime;
-	private long totalDuration;
-	
-	
-	// 	Constructor - creates a new, empty Animation.
-	public Animation() {
-		frames = new ArrayList();
-		totalDuration = 0;
-		start();
-	}
-	
-	
-	//	 Adds an image to the animation with the specified duration (time to display the image).
-	public synchronized void addFrame(Image image, long duration) {
-		totalDuration += duration;
-		frames.add(new AnimFrame(image, totalDuration));
-	}
-	
-	
-	// 	Starts this animation over from the beginning
-	public synchronized void start() {
-		animTime = 0;
-		currentFrameIndex = 0;
-	}
-	
-	
-	// 	Updates this animation's current image (frame), if necessary.
-	public synchronized void update(long elapsedTime) {
-		if(frames.size() > 1) {
-			animTime += elapsedTime;
-			
-			if(animTime >= totalDuration) {
-				animTime = animTime % totalDuration; // 	Makes sure the animation time starts over when the animation is done so that it loops
-				currentFrameIndex = 0;
-			}
-			
-			while(animTime > getFrame(currentFrameIndex).endTime) {
-				currentFrameIndex++;
-			}
-		}
-	}
-	
-	
-	// 	Gets this Animation's current image. Returns null if this animation has no images.
-	public synchronized Image getImage() {
-		if (frames.size() == 0) {
-			return null;
-		}
-		
-		else{
-			return getFrame(currentFrameIndex).image;
-		}
-	}
-	
-	
-	private AnimFrame getFrame(int i) {
-		return (AnimFrame)frames.get(i);
-	}
-	
-	private class AnimFrame {
-		Image image;
-		long endTime;
-		
-		public AnimFrame(Image image, long endTime) {
-			this.image = image;
-			this.endTime = endTime;
-		}
-	}
+
+    Image[] image;
+    int current = 0;
+    int counter = 0;
+    int delay;
+    int duration;
+    int max;
+
+    public Animation(){
+        current = 0;
+        delay = 0;
+        duration = 0;
+        counter = -1;
+        max = 0;
+    }
+
+    public Animation(int size){
+        max = size;
+        image  = new Image[size];
+
+        current = 0;
+        delay = 0;
+        duration = 0;
+        counter = -1;
+    }
+
+    public void update(){
+      if(isAnimationOver())
+          reset();
+    }
+
+
+    public Animation(String file, String format,int length, int duration) {
+
+        this.duration = duration;
+        delay = duration;
+        image = new Image[length];
+
+        for (int i = 1; i < length; i++) {
+            String fileName = file + i + format;
+            //System.out.println(fileName);
+            try {
+                image[i] = ImageIO.read(new File(fileName));
+            } catch (IOException e) {
+            	//e.printStackTrace();
+                System.out.println(e.getMessage());
+                System.out.println("Image file not found");
+            }
+        }
+    }
+
+    public void addImg(Image img){
+        if(counter<max) {
+            image[counter] = img;
+            counter++;
+        }
+    }
+
+    public void setAnimationSize(int length){
+        max = length;
+        image = new Image[length];
+    }
+
+    public void setTime(int length){
+        duration = length;
+        delay = length;
+    }
+
+
+    public void setDuration(int d){
+        duration += d;
+        delay    += d;
+    }
+
+    public Image staticImage() {
+        return image[0];
+    }
+
+    public Image nextImage() {
+
+        if(current != image.length-1) {
+            if (delay == 0) {
+                current++;
+            /*if (current == image.length - 1) {
+                current = 0;
+            }*/
+                delay = duration;
+            } else
+                delay--;
+        }
+
+        return image[current];
+    }
+
+    public void reset(){
+        current = 0;
+    }
+
+    public Image previousImage() {
+
+        if (current > 0){
+            if (delay == 0) {
+                current--;
+                if (current == 0) {
+                    current = image.length - 1;
+                }
+                delay = duration;
+            } else
+                delay--;
+            System.out.println(current);
+        }
+
+        return image[current];
+    }
+
+
+    public void setCurrent(int i){
+        current = i;
+    }
+
+    public Image getCurrentImg(){
+        return image[current];
+    }
+
+    public boolean isAnimationOver(){
+        return current == image.length-1;
+    }
+
+    public int getCurrentIndex(){
+        return current;
+    }
+
+    public int getLength(){
+        return image.length;
+    }
+
 }

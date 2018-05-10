@@ -4,7 +4,7 @@ import java.awt.Image;
 
 public class Sprite {
 
-	private Animation anim;
+	/*private Animation anim;
 	
 	// 	Position (pixels)
 	private float x;
@@ -92,5 +92,5 @@ public class Sprite {
 	// 	Gets this Sprite's current image.
 	public Image getImage() {
 		return anim.getImage();
-	}
+	}*/
 }

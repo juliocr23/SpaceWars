@@ -10,12 +10,16 @@
 package Entity;
 import Main.Game;
 import Main.GamePanel;
+import Main.Animation;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+<<<<<<< HEAD
 import java.util.ArrayList;
 
+=======
+>>>>>>> 3d743b1ddcc9c2ca9e6fdda7c69629128baa1db6
 import javax.imageio.ImageIO;
 
 public class Player extends Rectangle {
@@ -30,12 +34,16 @@ public class Player extends Rectangle {
 	private boolean moveUp;
 	private boolean moveDown;
 	private boolean shoot;
+	
+	private boolean isDead;
 
 	//private int width;
 	//private int height;
 
 	private int dx = 4;
 	private int dy = 4;
+	
+	private Animation explosion;
 
 	private ArrayList<Missile> rightMissile = new ArrayList<Missile>();
 	private ArrayList<Missile> leftMissile = new ArrayList<Missile>();
@@ -44,6 +52,13 @@ public class Player extends Rectangle {
 	public Player(int x, int y) {
 
 		super(x,y,0,0);
+<<<<<<< HEAD
+=======
+		
+		explosion = new Animation("Resources/explosion/explosion_", ".png", 38, 10);
+
+		isDead = false;
+>>>>>>> 3d743b1ddcc9c2ca9e6fdda7c69629128baa1db6
 
 		try {
 			player = ImageIO.read(new File("Resources/Background/player.png"));
@@ -86,19 +101,75 @@ public class Player extends Rectangle {
 			leftMissile.add(new Missile(x+width-8,y-3));
 		}
 
+<<<<<<< HEAD
 		for(int i = 0; i< rightMissile.size(); i++){
 			rightMissile.get(i).launch();
 			leftMissile.get(i).launch();
+=======
+		for(int i = 0; i<= counter; i++){
+
+			if(rightMissile[i] != null) {
+				rightMissile[i].launch();
+				leftMissile[i].launch();
+			}
+>>>>>>> 3d743b1ddcc9c2ca9e6fdda7c69629128baa1db6
 		}
-		
 	}
 	 
 	public void draw(Graphics g) {
-		g.drawImage(player, (int)x, (int)y,width,height, null);
+		if(!explosion.isAnimationOver()) {
+			
+			if(!isDead) {
+				g.drawImage(player, (int)x, (int)y,width,height, null);
 
+				for(int i = 0; i<= counter; i++){
+					if(rightMissile[i] != null) {
+						rightMissile[i].draw(g);
+						leftMissile[i].draw(g);
+					}
+				}
+			}
+			else {
+				g.drawImage(explosion.nextImage(), (int)x, (int)y, null);
+			}
+		}
+		
+	}
+	
+	public Missile[] getRightMissile() {
+		return rightMissile;
+	}
+	
+	public Missile[] getLeftMissile() {
+		return leftMissile;
+	}
+	
+	public void setToDead() {
+		isDead = true;
+	}
+	
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public boolean isMoving(){
+		return moveLeft || moveRight || moveDown || moveUp;
+	}
+
+	public boolean isAnimationOver(){
+		return explosion.isAnimationOver();
+	}
+
+<<<<<<< HEAD
 		for(int i = 0; i < rightMissile.size(); i++){
 			rightMissile.get(i).draw(g);
 			leftMissile.get(i).draw(g);
+=======
+	public void removeLaunchMissile(){
+		for(int i = 0; i<= counter; i++){
+			rightMissile[i] = null;
+			leftMissile[i] = null;
+>>>>>>> 3d743b1ddcc9c2ca9e6fdda7c69629128baa1db6
 		}
 	}
 	
