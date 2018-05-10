@@ -12,10 +12,10 @@ import Main.Game;
 import Main.GamePanel;
 
 public class MapState extends GameState {
-	
+
 	private Background bg;
 	private Background bg1;
-	
+
 	private Player player;
 	private Enemy enemy[];
 
@@ -23,14 +23,14 @@ public class MapState extends GameState {
 	private int counter = 3;
 	private int score = 0;
 
-	
+
 	public MapState(GameStateManager gsm) {
 		init();
 	}
 
 	@Override
 	public void init() {
-			
+
 		bg = new Background("Resources/Background/newBG.jpg", 1);
 		bg1 = new Background("Resources/Background/newCloud.png", 1);
 
@@ -38,16 +38,16 @@ public class MapState extends GameState {
 		bg.setVector(0, 0.15);
 		bg1.setPosition(150, -1377);
 		bg1.setVector(0, 0.5);
-		
-		player = new Player(GamePanel.WIDTH/2-10,300);
+
+		player = new Player(GamePanel.WIDTH / 2 - 10, 300);
 		enemy = new Enemy[60];
-		
-		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(100*i, -10, 1);
+
+		for (int i = 0; i < enemy.length; i++) {
+			enemy[i] = new Enemy(100 * i, -10, 1);
 			enemy[i].setSlope(getSlope());
 		}
 	}
-		
+
 	@Override
 	public void update() {
 
@@ -56,20 +56,20 @@ public class MapState extends GameState {
 
 		System.out.println(enemy[2].x);
 
-		int index  = isCollidingWithPlayer();
+		int index = isCollidingWithPlayer();
 
-		if(index != -1){
+		if (index != -1) {
 			enemy[index].setToDead();
 			player.setToDead();
 		}
 
-		if(player.isAnimationOver())
+		if (player.isAnimationOver())
 			player = null;
 
 		bg.update();
-		if(bg1.y >= 250) bg1.setPosition(0, -1500);
+		if (bg1.y >= 250) bg1.setPosition(0, -1500);
 		bg1.update();
-		
+
 	}
 
 	@Override
@@ -86,108 +86,97 @@ public class MapState extends GameState {
 
 		bg.draw(g);
 		bg1.draw(g);
-		
-		if(!player.isDead()) player.draw(g);
-			for(int i = 0; i<counter; i++) {
-				if(enemy[i] != null) {
-					enemy[i].draw(g);
-				}
+
+		if (!player.isDead()) player.draw(g);
+		for (int i = 0; i < counter; i++) {
+			if (enemy[i] != null) {
+				enemy[i].draw(g);
+			}
 		}
 
-		g.drawString(""+score,40,40);
+		g.drawString("" + score, 40, 40);
 	}
-	
+
 	public int isCollidingWithPlayer() {
 		int flag = -1;
 
-		if(player == null)
+		if (player == null)
 			return flag;
 
-		for(int i = starting; i<counter; i++) {
-			if(enemy[i] != null) {
+		for (int i = starting; i < counter; i++) {
+			if (enemy[i] != null) {
 				if (enemy[i].overlaps(player)) {
 					flag = i;
 					break;
 				}
 			}
 		}
-		
+
 		return flag;
 	}
-	
-	
+
+
 	public int isCollidingWithMissile() {
-		
+
 		int flag = -1;
 		Missile m1[] = player.getRightMissile();
 		Missile m2[] = player.getLeftMissile();
-		
-		for(int i = starting; i<counter; i++) {
-			for(int j = 0; j<m1.length; j++) {
-				
-				if(m1[j] != null) {
-					if( m2[j].overlaps(enemy[i]) || m1[j].overlaps(enemy[i]) ) {
+
+		for (int i = starting; i < counter; i++) {
+			for (int j = 0; j < m1.length; j++) {
+
+				if (m1[j] != null) {
+					if (m2[j].overlaps(enemy[i]) || m1[j].overlaps(enemy[i])) {
 						flag = i;
 						break;
-						
+
 					}
 				}
 			}
 		}
-		
+
 		return flag;
 	}
-	
-	
-	private double getSlope(){
 
-		double y2 = (enemy[0].y +enemy[0].height);
+
+	private double getSlope() {
+
+		double y2 = (enemy[0].y + enemy[0].height);
 		double y1 = player.y;
-		double x2 = (enemy[0].x+enemy[0].width);
-		double x1  = player.x;
+		double x2 = (enemy[0].x + enemy[0].width);
+		double x1 = player.x;
 		double m = (y2 - y1) / (x2 - x1);
 
 		return m;
 	}
 
-	private void updateEnemy(){
-
-		//Change slope if player's move
-	//	if(player.isMoving()){
-	//		for(int i = 0; i<counter; i++)
-		//		enemy[i].setSlope(getSlope());
-		//}
+	private void updateEnemy() {
 
 		//Update enemy
-		for(int i = starting; i<counter; i++){
-			if(enemy[i] != null) {
+		for (int i = starting; i < counter; i++) {
+
+			if (enemy[i] != null) {
+
 				enemy[i].update();
-
-				if(enemy[i].isAnimationOver()) {
-					enemy[i] = null;
-
-					if(enemy[i] != null) {
-						if (enemy[i].y >= GamePanel.HEIGHT) {
-							enemy[i] = null;
-						}
-					}
+				if (enemy[i].y >= GamePanel.HEIGHT) {
+					//enemy[i] = null;
+					starting++;
+					counter++;
+					//System.out.println("Sending new ships");
+					enemy[i].setToDead();
 				}
+			}
+			if (enemy[i].isAnimationOver()) {
+				enemy[i] = null;
 			}
 		}
 
+
 		int index = isCollidingWithMissile();
 
-		if(index != -1){
+		if (index != -1) {
 			enemy[index].setToDead();
 			player.removeLaunchMissile();
 		}
-
 	}
-
-	
-	
-	
-	
-	
-	
 }
