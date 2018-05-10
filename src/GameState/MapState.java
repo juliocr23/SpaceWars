@@ -42,7 +42,7 @@ public class MapState extends GameState {
 		enemy = new Enemy[60];
 		
 		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(-10, -10, 1);
+			enemy[i] = new Enemy(50*i, -10, 1);
 			enemy[i].setSlope(getSlope());
 		}
 	}
@@ -64,7 +64,7 @@ public class MapState extends GameState {
 			if(enemy[i] != null)
 				enemy[i].update();
 		}
-		
+
 		bg.update();
 		if(bg1.y >= 250) bg1.setPosition(0, -1500);
 		bg1.update();
