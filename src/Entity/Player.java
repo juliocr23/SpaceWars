@@ -10,40 +10,50 @@
 package Entity;
 import Main.Game;
 import Main.GamePanel;
+import Main.Animation;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
-public class Player {
+public class Player extends Rectangle {
 
     private BufferedImage player;
 	
-	private double x;
-	private double y;
+	//private double x;
+	//private double y;
 	
 	private boolean moveLeft;
 	private boolean moveRight;
 	private boolean moveUp;
 	private boolean moveDown;
 	private boolean shoot;
+	
+	private boolean isDead;
 
-	private int width;
-	private int height;
+	//private int width;
+	//private int height;
 
 	private int dx = 4;
 	private int dy = 4;
+	
+	private Animation explosion;
 
 	private Missile[] rightMissile;
 	private Missile[] leftMissile;
 	private int counter = -1;
 
 	public Player(int x, int y) {
+		
 
-		this.x = x;
-		this.y = y;
+		super(x,y,0,0);
+		
+		explosion = new Animation("Resources/explosion/explosion01_", ".png", 38, 1);
+		
+		
+		
+		isDead = false;
 
 		try {
 			player = ImageIO.read(new File("Resources/Background/player.png"));
@@ -93,14 +103,39 @@ public class Player {
 			leftMissile[i].launch();
 		}
 		
+		if(explosion.isAnimationOver()) {
+			
+		}
+		
 	}
 	 
 	public void draw(Graphics g) {
-		g.drawImage(player, (int)x, (int)y,width,height, null);
+		if(!explosion.isAnimationOver()) {
+			
+			if(!isDead) {
+				g.drawImage(player, (int)x, (int)y,width,height, null);
 
-		for(int i = 0; i<= counter; i++){
-			rightMissile[i].draw(g);
-			leftMissile[i].draw(g);
+				for(int i = 0; i<= counter; i++){
+					rightMissile[i].draw(g);
+					leftMissile[i].draw(g);
+				}
+			}
+			else {
+				g.drawImage(explosion.nextImage(), (int)x, (int)y, null);
+			}
 		}
+		
+	}
+	
+	public Missile[] getRightMissile() {
+		return rightMissile;
+	}
+	
+	public Missile[] getLeftMissile() {
+		return leftMissile;
+	}
+	
+	public void setToDead() {
+		isDead = true;
 	}
 }

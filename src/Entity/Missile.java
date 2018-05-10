@@ -9,17 +9,12 @@ public class Missile extends Rectangle {
 
     private BufferedImage missile;
 
-    private double x;
-    private double y;
     private double velocity = 2;
     private double acceleration = 0.02;
 
-    private int width;
-    private int height;
-
     public Missile(double x, double y){
-        this.x = x;
-        this.y = y;
+    	
+       super(x,y,0,0);
 
         try {
             missile = ImageIO.read(new File("Resources/Background/Missiles.png"));
