@@ -79,13 +79,17 @@ public class MapState extends GameState {
 	public void draw(Graphics g) {
 		bg.draw(g);
 		bg1.draw(g);
-		player.draw(g);
+		
+		if(!player.isDead()) player.draw(g);
 		for(int i = 0; i<counter; i++) {
 			
-			int w = (int) enemy[i].getWidth();
+			if(enemy[i] != null) {
+				int w = (int) enemy[i].getWidth();
+				
+				enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
+				enemy[i].draw(g);
+			}
 			
-			enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
-			enemy[i].draw(g);
 		}
 	}
 	
@@ -96,8 +100,9 @@ public class MapState extends GameState {
 			if(enemy[i].overlaps(player)) {
 				flag = true;
 				enemy[i].setToDead();
-				//enemy[i] = null;
+				enemy[i] = null;
 				player.setToDead();
+				//player = null;
 				break;
 			}
 		}

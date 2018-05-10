@@ -114,5 +114,9 @@ public class Enemy extends Rectangle{
 		isDead = true;
 	}
 	
+	public boolean isDead() {
+		return isDead;
+	}
+	
 
 }

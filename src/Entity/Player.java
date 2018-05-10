@@ -134,4 +134,8 @@ public class Player extends Rectangle {
 	public void setToDead() {
 		isDead = true;
 	}
+	
+	public boolean isDead() {
+		return isDead;
+	}
 }
