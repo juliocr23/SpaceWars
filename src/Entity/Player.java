@@ -49,7 +49,7 @@ public class Player extends Rectangle {
 
 		super(x,y,0,0);
 		
-		explosion = new Animation("Resources/explosion/explosion01_", ".png", 38, 1);
+		explosion = new Animation("Resources/explosion/explosion_", ".png", 38, 10);
 		
 		
 		
@@ -103,10 +103,6 @@ public class Player extends Rectangle {
 			leftMissile[i].launch();
 		}
 		
-		if(explosion.isAnimationOver()) {
-			
-		}
-		
 	}
 	 
 	public void draw(Graphics g) {
@@ -137,5 +133,9 @@ public class Player extends Rectangle {
 	
 	public void setToDead() {
 		isDead = true;
+	}
+	
+	public boolean isDead() {
+		return isDead;
 	}
 }

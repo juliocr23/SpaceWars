@@ -18,7 +18,7 @@ public class MapState extends GameState {
 	
 	private Player player;
 	private Enemy enemy[];
-	private int counter = 5;
+	private int counter = 8;
 	
 	public MapState(GameStateManager gsm) {
 
@@ -79,13 +79,17 @@ public class MapState extends GameState {
 	public void draw(Graphics g) {
 		bg.draw(g);
 		bg1.draw(g);
-		player.draw(g);
+		
+		if(!player.isDead()) player.draw(g);
 		for(int i = 0; i<counter; i++) {
 			
-			int w = (int) enemy[i].getWidth();
+			if(enemy[i] != null) {
+				int w = (int) enemy[i].getWidth();
+				
+				enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
+				enemy[i].draw(g);
+			}
 			
-			enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
-			enemy[i].draw(g);
 		}
 	}
 	
@@ -96,7 +100,9 @@ public class MapState extends GameState {
 			if(enemy[i].overlaps(player)) {
 				flag = true;
 				enemy[i].setToDead();
+				enemy[i] = null;
 				player.setToDead();
+				//player = null;
 				break;
 			}
 		}
@@ -115,8 +121,7 @@ public class MapState extends GameState {
 			for(int j = 0; j<m1.length; j++) {
 				
 				if(m1[j] != null) {
-					if(m2[j].overlaps(enemy[i])
-							||m1[j].overlaps(enemy[i]) ) {
+					if( m2[j].overlaps(enemy[i]) || m1[j].overlaps(enemy[i]) ) {
 						flag = i;
 						break;
 						
