@@ -45,14 +45,11 @@ public class Player extends Rectangle {
 	private int counter = -1;
 
 	public Player(int x, int y) {
-		
 
 		super(x,y,0,0);
 		
 		explosion = new Animation("Resources/explosion/explosion_", ".png", 38, 10);
-		
-		
-		
+
 		isDead = false;
 
 		try {
@@ -99,10 +96,12 @@ public class Player extends Rectangle {
 		}
 
 		for(int i = 0; i<= counter; i++){
-			rightMissile[i].launch();
-			leftMissile[i].launch();
+
+			if(rightMissile[i] != null) {
+				rightMissile[i].launch();
+				leftMissile[i].launch();
+			}
 		}
-		
 	}
 	 
 	public void draw(Graphics g) {
@@ -112,8 +111,10 @@ public class Player extends Rectangle {
 				g.drawImage(player, (int)x, (int)y,width,height, null);
 
 				for(int i = 0; i<= counter; i++){
-					rightMissile[i].draw(g);
-					leftMissile[i].draw(g);
+					if(rightMissile[i] != null) {
+						rightMissile[i].draw(g);
+						leftMissile[i].draw(g);
+					}
 				}
 			}
 			else {
@@ -145,5 +146,12 @@ public class Player extends Rectangle {
 
 	public boolean isAnimationOver(){
 		return explosion.isAnimationOver();
+	}
+
+	public void removeLaunchMissile(){
+		for(int i = 0; i<= counter; i++){
+			rightMissile[i] = null;
+			leftMissile[i] = null;
+		}
 	}
 }

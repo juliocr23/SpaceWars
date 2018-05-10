@@ -35,8 +35,8 @@ public class Enemy extends Rectangle{
 		
 		try {
 			enemy = ImageIO.read(new File("Resources/Background/alien1.png"));
-			width = 50;
-			height = 100;
+			width = (int)(enemy.getWidth()*.2);
+			height = (int)(enemy.getHeight()*.2);
 			
 		}
 		catch(Exception e) {
@@ -57,7 +57,6 @@ public class Enemy extends Rectangle{
 	
 	public void update() {
 
-
 		if(shoot){
 			counter++;
 			rightMissile[counter] = new Missile(x+5,y-3);
@@ -70,15 +69,15 @@ public class Enemy extends Rectangle{
 		}
 
 		if(slope > 0){
-			x += 0.01*Math.abs(y/slope);
+			x += 0.008*(y/slope);
 			y = Math.abs(x*slope);
-			System.out.println(x);
+			//System.out.println(x);
 		}
 
 	}
 	 
 	public void draw(Graphics g) {
-		if(!explosion.isAnimationOver()) {
+		/*if(!explosion.isAnimationOver()) {
 			
 			if(!isDead) {
 				g.drawImage(enemy, (int)x, (int)y,50,100, null);
@@ -94,10 +93,18 @@ public class Enemy extends Rectangle{
 				g.drawImage(explosion.nextImage(), (int)x, (int)y, null);
 				//super.moveBy(2000, 2000);
 			}
-		}
-		
+		}*/
 
-		
+		if(!isDead) {
+			g.drawImage(enemy, (int) x, (int) y, width, height, null);
+			for (int i = 0; i <= counter; i++) {
+				rightMissile[i].draw(g);
+				leftMissile[i].draw(g);
+			}
+		}
+		else {
+			g.drawImage(explosion.nextImage(), (int)x, (int)y, null);
+		}
 	}
 	
 	public double getWidth() {

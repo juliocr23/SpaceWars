@@ -19,7 +19,8 @@ public class MapState extends GameState {
 	private Player player;
 	private Enemy enemy[];
 
-	private int counter = 8;
+	private int starting = 0;
+	private int counter = 3;
 	private int score = 0;
 
 	
@@ -42,16 +43,18 @@ public class MapState extends GameState {
 		enemy = new Enemy[60];
 		
 		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(50*i, -10, 1);
+			enemy[i] = new Enemy(100*i, -10, 1);
 			enemy[i].setSlope(getSlope());
 		}
 	}
 		
 	@Override
 	public void update() {
-		
+
 		player.update();
 		updateEnemy();
+
+		System.out.println(enemy[2].x);
 
 		int index  = isCollidingWithPlayer();
 
@@ -96,8 +99,11 @@ public class MapState extends GameState {
 	
 	public int isCollidingWithPlayer() {
 		int flag = -1;
-		
-		for(int i = 0; i<counter; i++) {
+
+		if(player == null)
+			return flag;
+
+		for(int i = starting; i<counter; i++) {
 			if(enemy[i] != null) {
 				if (enemy[i].overlaps(player)) {
 					flag = i;
@@ -116,7 +122,7 @@ public class MapState extends GameState {
 		Missile m1[] = player.getRightMissile();
 		Missile m2[] = player.getLeftMissile();
 		
-		for(int i = 0; i<counter; i++) {
+		for(int i = starting; i<counter; i++) {
 			for(int j = 0; j<m1.length; j++) {
 				
 				if(m1[j] != null) {
@@ -147,18 +153,25 @@ public class MapState extends GameState {
 	private void updateEnemy(){
 
 		//Change slope if player's move
-		if(player.isMoving()){
-			for(int i = 0; i<counter; i++)
-				enemy[i].setSlope(getSlope());
-		}
+	//	if(player.isMoving()){
+	//		for(int i = 0; i<counter; i++)
+		//		enemy[i].setSlope(getSlope());
+		//}
 
 		//Update enemy
-		for(int i = 0; i<counter; i++){
+		for(int i = starting; i<counter; i++){
 			if(enemy[i] != null) {
 				enemy[i].update();
 
-				if(enemy[i].isAnimationOver())
+				if(enemy[i].isAnimationOver()) {
 					enemy[i] = null;
+
+					if(enemy[i] != null) {
+						if (enemy[i].y >= GamePanel.HEIGHT) {
+							enemy[i] = null;
+						}
+					}
+				}
 			}
 		}
 
@@ -166,6 +179,7 @@ public class MapState extends GameState {
 
 		if(index != -1){
 			enemy[index].setToDead();
+			player.removeLaunchMissile();
 		}
 
 	}
