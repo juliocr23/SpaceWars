@@ -1,37 +1,50 @@
 package Entity;
 
 import javax.imageio.ImageIO;
-
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-public class Missile extends Rectangle {
+public class Missile {
 
     private BufferedImage missile;
+    
+    private double x;
+    private double y;
 
     private double velocity = 2;
     private double acceleration = 0.02;
 
     public Missile(double x, double y){
-    	
-       super(x,y,0,0);
 
         try {
-            missile = ImageIO.read(new File("Resources/Background/Missiles.png"));
+        	
+        		missile = ImageIO.read(getClass().getResourceAsStream("/Background/Missiles.png"));
 
-            width =  (int)(missile.getWidth()*0.4);
-            height = (int)(missile.getHeight()*0.2);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+        
+        this.x = x;
+        this.y = y;
     }
 
+    public double getX() { return this.x; }
+	public double getY() { return this.y; }
+	
+	public Rectangle getBounds() {
+
+		return new Rectangle((int)x, (int)y, (int) (missile.getWidth() * 0.4), (int) (missile.getHeight() * 0.2));
+	}
+    
     public void draw(Graphics g){
-        g.drawImage(missile,(int)x,(int)y,width,height, null);
+    	
+    		//g.drawRect((int)x, (int)y, (int) (missile.getWidth() * 0.4), (int) (missile.getHeight() * 0.2));
+    	
+        g.drawImage(missile, (int)x, (int)y, (int) (missile.getWidth() * 0.4), (int) (missile.getHeight() * 0.2), null);
     }
 
-    public void launch(){
+    public void update(){
 
         if(velocity <= 4)
             velocity += acceleration;
@@ -39,19 +52,5 @@ public class Missile extends Rectangle {
         y -= velocity;
     }
 
-    public void moveLeftBy(int dx){
-        x -= dx;
-    }
-
-    public void moveRightBy(int dx){
-        x += dx;
-    }
-
-    public void moveUpBy(int dy){
-        y-= dy;
-    }
-
-    public void moveDownBy(int dy){
-        y+= dy;
-    }
+   
 }

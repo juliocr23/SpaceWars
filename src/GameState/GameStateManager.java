@@ -45,16 +45,30 @@ public class GameStateManager {
 
 	}
 
-	public void processInput(){
-		gameStates[currentState].processInput();
-	}
-
 	public void update() {
-		gameStates[currentState].update();
+		
+		if(gameStates[currentState] != null) 
+			
+			gameStates[currentState].update();
+		
 	}
 
 	public void draw(Graphics g) {
-		gameStates[currentState].draw(g);
+		
+		if(gameStates[currentState] != null) 
+			
+			gameStates[currentState].draw(g);
+		
+	}
+	
+	public void keyPressed(int k) {
+		
+		gameStates[currentState].keyPressed(k);
+	}
+	
+	public void keyReleased(int k) {
+		
+		gameStates[currentState].keyReleased(k);
 	}
 
 }

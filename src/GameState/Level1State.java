@@ -7,9 +7,9 @@ import java.awt.event.KeyEvent;
 import Main.Background;
 import Entity.Enemy;
 import Entity.Missile;
+import Entity.MissileController;
 import Entity.Player;
-import Main.Game;
-import Main.GamePanel;
+
 
 public class Level1State extends GameState {
 	
@@ -20,6 +20,9 @@ public class Level1State extends GameState {
 	private Enemy enemy[];
 	private int counter = 5;
 	
+	MissileController leftMissile;
+	MissileController rightMissile;
+	
 	public Level1State(GameStateManager gsm) {
 		this.gsm = gsm;
 		init();
@@ -28,24 +31,40 @@ public class Level1State extends GameState {
 	@Override
 	public void init() {
 			
-		bg = new Background("Resources/Background/newBG.jpg", 1);
-		bg1 = new Background("Resources/Background/newCloud.png", 1);
+		bg = new Background("/Background/mapbg1.jpg", 1);
+		bg1 = new Background("/Background/clouds.png", 1);
 
 		bg.setPosition(0, -1000);
 		bg.setVector(0, 0.15);
 		bg1.setPosition(150, -1377);
 		bg1.setVector(0, 0.5);
 		
-		player = new Player(GamePanel.WIDTH/2-10,300);
-		enemy = new Enemy[60];
+		leftMissile = new MissileController();
+		rightMissile = new MissileController();
+		
+		player = new Player(120, 200);
+		enemy = new Enemy[5];
 		
 		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(0,0);
+			enemy[i] = new Enemy(20 + 50 * i, 0);
 		}
 	}
 		
 	@Override
 	public void update() {
+		
+		if(player.x <= 0) {
+			player.setPosition(0, player.y);
+		}if(player.x >= 290) {
+			player.setPosition(290, player.y);
+		}if(player.y >= 215) {
+			player.setPosition(player.x, 215);
+		}if(player.y <= 0) {
+			player.setPosition(player.x, 0);
+		}
+		
+	
+		
 		
 		player.update();
 		
@@ -54,12 +73,14 @@ public class Level1State extends GameState {
 			System.out.println("is hit with missle");
 		}
 		
+		
 		if(isCollidingWithPlayer()) {
 			//player.die();
 			System.out.println("is dead");
 		}
 		
-		removeOffScreenMissiles();
+		leftMissile.update();
+		rightMissile.update();
 		
 		bg.update();
 		if(bg1.y >= 250) bg1.setPosition(0, -1500);
@@ -67,25 +88,19 @@ public class Level1State extends GameState {
 		
 	}
 
-	@Override
-	public void processInput() {
-		player.moveLeft(GamePanel.input.keyDown(KeyEvent.VK_LEFT));
-		player.moveRight(GamePanel.input.keyDown(KeyEvent.VK_RIGHT));
-		player.moveDown(GamePanel.input.keyDown(KeyEvent.VK_DOWN));
-		player.moveUp(GamePanel.input.keyDown(KeyEvent.VK_UP));
-		player.shoot(GamePanel.input.keyDownOnce(KeyEvent.VK_S));
-	}
 
 	@Override
 	public void draw(Graphics g) {
 		bg.draw(g);
 		bg1.draw(g);
 		player.draw(g);
+		
+		leftMissile.draw(g);
+		rightMissile.draw(g);
+		
 		for(int i = 0; i<counter; i++) {
 			
-			int w = (int) enemy[i].getWidth();
 			
-			enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
 			enemy[i].draw(g);
 		}
 	}
@@ -93,8 +108,8 @@ public class Level1State extends GameState {
 	public boolean isCollidingWithPlayer() {
 		boolean flag = false;
 		
-		for(int i = 0; i<counter; i++) {
-			if(enemy[i].overlaps(player)) {
+		for(int i = 0; i<enemy.length; i++) {
+			if(enemy[i].getBounds().intersects(player.getBounds())) {
 				flag = true;
 				break;
 			}
@@ -108,31 +123,49 @@ public class Level1State extends GameState {
 		
 		boolean isColliding = false;
 		
-		for(int i = 0; i<counter; i++) {
-			for(int j = 0; j < player.getRightMissile().size(); j++) {
-				
-				if(player.getRightMissile() != null) {
-					if(player.getLeftMissile().get(j).overlaps(enemy[i])
-							|| player.getRightMissile().get(j).overlaps(enemy[i]) ) {
+		
+			for(int i = 0; i < enemy.length; i++) {
+				for(int j = 0; j < leftMissile.b.size(); j++) {
+						if(leftMissile.b.get(j).getBounds().intersects(enemy[i].getBounds())) {
+							isColliding = true;
+							
+						}
+				}
+				for(int j = 0; j < rightMissile.b.size(); j++) {
+					if(rightMissile.b.get(j).getBounds().intersects(enemy[i].getBounds())) {
 						isColliding = true;
-						;
-						
 					}
 				}
 			}
-		}
 		
 		return isColliding;
 	}
-	
-	public void removeOffScreenMissiles() {
+
+
+	@Override
+	public void keyPressed(int k) {
 		
-		for(int i = 0; i < player.getLeftMissile().size(); i++) {
-			if(player.getLeftMissile().get(i).y <= 0) {
-				player.getLeftMissile().remove(i);
-				player.getRightMissile().remove(i);
-			}
+		if(k == KeyEvent.VK_LEFT) player.moveLeft(true);
+		if(k == KeyEvent.VK_RIGHT) player.moveRight(true);
+		if(k == KeyEvent.VK_UP) player.moveUp(true);
+		if(k == KeyEvent.VK_DOWN) player.moveDown(true);
+
+	}
+
+	@Override
+	public void keyReleased(int k) {
+		if(k == KeyEvent.VK_LEFT) player.moveLeft(false);
+		if(k == KeyEvent.VK_RIGHT) player.moveRight(false);
+		if(k == KeyEvent.VK_UP) player.moveUp(false);
+		if(k == KeyEvent.VK_DOWN) player.moveDown(false);
+		
+		if(k == KeyEvent.VK_S) {
+			
+			leftMissile.addMissile(new Missile(player.x + 2, player.y));
+			rightMissile.addMissile(new Missile(player.x + 25, player.y));
+			
 		}
+	
 	}
 	
 	

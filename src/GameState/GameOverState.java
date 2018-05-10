@@ -39,12 +39,6 @@ public class GameOverState extends GameState {
 	}
 
 	@Override
-	public void processInput() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void draw(Graphics g) {
 		bg.draw(g);
 		
@@ -64,6 +58,20 @@ public class GameOverState extends GameState {
 			}
 			g.drawString(options[i], 350 + i * 10, 450 + i * 30);
 		}
+	}
+
+
+	@Override
+	public void keyPressed(int k) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyReleased(int k) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

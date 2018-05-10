@@ -21,7 +21,7 @@ public class Background {
 	public Background(String s, double ms) {
 		
 		try {
-			image = ImageIO.read(new File(s));
+			image = ImageIO.read(getClass().getResourceAsStream(s));
 			moveScale = ms;
 		}
 		catch(Exception e) {
@@ -48,10 +48,9 @@ public class Background {
 	}
 	
 	public void draw(Graphics g) {
+		
 		g.drawImage(image, (int)x, (int)y, null);
-	}
-
-	public void draw(Graphics g, int w, int h){
-		g.drawImage(image, (int)x, (int)y,w,h, null);
+		
+		
 	}
 }
