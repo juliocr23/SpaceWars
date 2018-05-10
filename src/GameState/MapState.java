@@ -18,10 +18,12 @@ public class MapState extends GameState {
 	
 	private Player player;
 	private Enemy enemy[];
+
 	private int counter = 8;
+	private int score = 0;
+
 	
 	public MapState(GameStateManager gsm) {
-
 		init();
 	}
 
@@ -40,24 +42,28 @@ public class MapState extends GameState {
 		enemy = new Enemy[60];
 		
 		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(0, 0, 1);
+			enemy[i] = new Enemy(-10, -10, 1);
 		}
+
+		enemy[0].setSlope(getSlope());
 	}
 		
 	@Override
 	public void update() {
 		
 		player.update();
-		
-		if(isCollidingWithMissile() != -1) {
-			//enemy[i].explode();
-			enemy[isCollidingWithMissile()].setToDead();
-			System.out.println("is hit with missle");
-		}
+
+		//enemy[0].setSlope(getSlope());
+		enemy[0].update();
+
+
+		//if(isCollidingWithMissile() != -1) {
+			//enemy[isCollidingWithMissile()].setToDead();
+
+		//}
 		
 		if(isCollidingWithPlayer()) {
 			player.setToDead();
-			System.out.println("is dead");
 		}
 		
 		bg.update();
@@ -77,6 +83,7 @@ public class MapState extends GameState {
 
 	@Override
 	public void draw(Graphics g) {
+
 		bg.draw(g);
 		bg1.draw(g);
 		
@@ -89,8 +96,12 @@ public class MapState extends GameState {
 				enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
 				enemy[i].draw(g);
 			}
-			
+
+		//	enemy[i].setValues((GamePanel.WIDTH/2-120)+i*w, 50);
+			enemy[i].draw(g);
 		}
+
+		g.drawString(""+score,40,40);
 	}
 	
 	public boolean isCollidingWithPlayer() {
@@ -134,7 +145,16 @@ public class MapState extends GameState {
 	}
 	
 	
-	
+	private double getSlope(){
+
+		double y2 = (enemy[0].y +enemy[0].height);
+		double y1 = player.y;
+		double x2 = (enemy[0].x+enemy[0].width);
+		double x1  = player.x;
+		double m = (y2 - y1) / (x2 - x1);
+
+		return m;
+	}
 	
 	
 	

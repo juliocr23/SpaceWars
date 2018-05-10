@@ -17,13 +17,11 @@ public class Enemy extends Rectangle{
     private boolean isDead; // to detect when to play explosion
     
     private Animation explosion;
-	
-	//private double x, y;
-	//private int width, height;
 	private boolean shoot;
 	private Missile[] rightMissile;
 	private Missile[] leftMissile;
 	private int counter = -1;
+	private double slope;
 
 	public Enemy(int x, int y, int health) {
 
@@ -31,13 +29,12 @@ public class Enemy extends Rectangle{
 		
 		explosion = new Animation("Resources/explosion/explosion_", ".png", 38, 10);
 		isDead = false;
-		
+		slope = 0;
+
 		this.health = health;
 		
 		try {
 			enemy = ImageIO.read(new File("Resources/Background/alien1.png"));
-			//width = enemy.getWidth();
-			//height = enemy.getHeight();
 			width = 50;
 			height = 100;
 			
@@ -71,7 +68,11 @@ public class Enemy extends Rectangle{
 			rightMissile[i].launch();
 			leftMissile[i].launch();
 		}
-		
+
+		if(slope > 0){
+			x = (y/slope);
+			y = (x*slope);
+		}
 	}
 	 
 	public void draw(Graphics g) {
@@ -116,6 +117,10 @@ public class Enemy extends Rectangle{
 	
 	public boolean isDead() {
 		return isDead;
+	}
+
+	public void setSlope(double m){
+		slope = m;
 	}
 	
 
