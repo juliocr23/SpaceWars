@@ -162,7 +162,7 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_S) {
 			
 			leftMissile.addMissile(new Missile(player.x + 2, player.y));
-			rightMissile.addMissile(new Missile(player.x + 25, player.y));
+			rightMissile.addMissile(new Missile(player.x + 24, player.y));
 			
 		}
 	
