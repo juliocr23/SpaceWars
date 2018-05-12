@@ -59,12 +59,12 @@ public class Enemy {
 		double d = vx*ux + vy*uy;
 	
 	
-		if ( d > 20)
+		if ( d > 0)
 			moveForwardBy(5);
 		
 	}
 	
-	public void moveForwardBy(int distance) {
+	public void moveForwardBy(double distance) {
 		x += distance * Math.cos(A*Math.PI/180);
 	    //y += distance * Math.sin(A*Math.PI/180);
 		
@@ -83,7 +83,7 @@ public class Enemy {
 
 	      double d = vx*nx + vy*ny;
 
-	      if(d > 10)
+	      if(d > 0)
 	      {
 	          A += 3;
 	          if (A >= 360)  A -= 360;

@@ -68,6 +68,7 @@ public class Player {
 	public void draw(Graphics g) {
 		
 		g.drawImage(player, (int)x, (int)y, player.getWidth(),player.getHeight(), null);
+		g.drawRect((int)x, (int)y, player.getWidth(), player.getHeight());
 
 		
 	}
