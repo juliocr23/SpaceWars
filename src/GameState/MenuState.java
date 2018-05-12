@@ -25,7 +25,7 @@ public class MenuState extends GameState {
 		
 		try {
 			
-			bg = new Background("/Background/earth.gif", 1);
+			//bg = new Background("/Background/earth.gif", 1);
 			
 			titleColor = new Color(255, 0, 0);
 			titleFont = new Font("Century Gothic", Font.BOLD, 28);
@@ -46,14 +46,14 @@ public class MenuState extends GameState {
 	@Override
 	public void update() {
 		
-		bg.update();
+		//bg.update();
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		
 		// draw bg
-		bg.draw(g);
+		//bg.draw(g);
 		
 		// draw title
 		g.setColor(titleColor);

@@ -43,10 +43,11 @@ public class Level1State extends GameState {
 		rightMissile = new MissileController();
 		
 		player = new Player(120, 200);
-		enemy = new Enemy[5];
+		enemy = new Enemy[1];
+		//tEnemy = new Enemy(200, -50);
 		
 		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(20 + 50 * i, 0);
+			enemy[i] = new Enemy(20 + 50 * i, -100);
 		}
 	}
 		
@@ -86,6 +87,11 @@ public class Level1State extends GameState {
 		if(bg1.y >= 250) bg1.setPosition(0, -1500);
 		bg1.update();
 		
+		for(int i = 0; i<enemy.length; i++) {
+			enemy[i].moveTowards(player);
+			
+			enemy[i].update();
+		}
 	}
 
 
@@ -98,7 +104,7 @@ public class Level1State extends GameState {
 		leftMissile.draw(g);
 		rightMissile.draw(g);
 		
-		for(int i = 0; i<counter; i++) {
+		for(int i = 0; i<enemy.length; i++) {
 			
 			
 			enemy[i].draw(g);
@@ -128,12 +134,14 @@ public class Level1State extends GameState {
 				for(int j = 0; j < leftMissile.b.size(); j++) {
 						if(leftMissile.b.get(j).getBounds().intersects(enemy[i].getBounds())) {
 							isColliding = true;
+							leftMissile.b.remove(j);
 							
 						}
 				}
 				for(int j = 0; j < rightMissile.b.size(); j++) {
 					if(rightMissile.b.get(j).getBounds().intersects(enemy[i].getBounds())) {
 						isColliding = true;
+						rightMissile.b.remove(j);
 					}
 				}
 			}
