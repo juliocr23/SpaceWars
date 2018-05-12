@@ -4,22 +4,30 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 
 public class Enemy {
 
     private BufferedImage enemy;
+    private BufferedImage projectile;
+    
+    private ArrayList<Missile> missiles;
 	
 	private double x, y;
 	private int A;
+	private long Timer = -1;
 	//private int width, height;
 	private boolean shoot;
 
 	public Enemy(double x, double y) {
 
+		missiles = new ArrayList<Missile>();
 		
 		try {
 			enemy = ImageIO.read(getClass().getResourceAsStream("/Enemies/alien1.png"));
+			projectile = ImageIO.read(getClass().getResourceAsStream("/Background/Missiles.png"));
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -30,7 +38,7 @@ public class Enemy {
 
 	}
 	
-	public void shoot(boolean b) { shoot = b; }
+	
 	
 	
 	public Rectangle getBounds() {
@@ -88,8 +96,33 @@ public class Enemy {
 
 	}
 	
+	public boolean isShooting() {
+		
+		if(Timer <= -1) {
+			Timer = System.nanoTime();
+		}else {
+			long elapsed = (System.nanoTime() - Timer) / 1000000;
+			if(elapsed > 1000) {
+				Timer = -1;
+				return true;
+			}
+		}
+		
+		
+		return false;
+	}
+	
 	
 	public void update() {
+		
+		if(isShooting()) {
+			missiles.add(new Missile(x+25,y+20));
+		}
+		
+		for(int i = 0; i < missiles.size(); i++) {
+			missiles.get(i).update2();
+		}
+		
 
 		if(y != 0)
 			y += 1;
@@ -101,7 +134,10 @@ public class Enemy {
 		
 		//g.drawRect((int)x, (int)y, 50, 80);
 		g.drawImage(enemy, (int)x, (int)y, 50, 100, null);
-
+		
+		for(int i = 0; i < missiles.size(); i++) {
+			missiles.get(i).draw(g);
+		}
 
 	}
 	

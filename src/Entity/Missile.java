@@ -51,6 +51,10 @@ public class Missile {
 
         y -= velocity;
     }
-
+    
+    public void update2() {
+    	
+    	y += 5;
+    }
    
 }

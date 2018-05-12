@@ -34,9 +34,9 @@ public class Level1State extends GameState {
 		bg = new Background("/Background/mapbg1.jpg", 1);
 		bg1 = new Background("/Background/clouds.png", 1);
 
-		bg.setPosition(0, -1000);
+		bg.setPosition(0, -1227);
 		bg.setVector(0, 0.15);
-		bg1.setPosition(150, -1377);
+		bg1.setPosition(0, -1377);
 		bg1.setVector(0, 0.5);
 		
 		leftMissile = new MissileController();
