@@ -13,9 +13,9 @@ public class Enemy {
     private BufferedImage enemy;
     private BufferedImage projectile;
     
-    private ArrayList<Missile> missiles;
+    public ArrayList<Missile> missiles;
 	
-	private double x, y;
+	public double x, y;
 	private int A;
 	private long Timer = -1;
 	//private int width, height;
@@ -37,9 +37,6 @@ public class Enemy {
 		this.y = y;
 
 	}
-	
-	
-	
 	
 	public Rectangle getBounds() {
 
@@ -88,7 +85,7 @@ public class Enemy {
 	          A += 3;
 	          if (A >= 360)  A -= 360;
 	      }
-	      if(d < -10)
+	      if(d < -20)
 	      {
 	         A -= 3;
 	         if(A < 0)  A += 360;
@@ -114,14 +111,6 @@ public class Enemy {
 	
 	
 	public void update() {
-		
-		if(isShooting()) {
-			missiles.add(new Missile(x+25,y+20));
-		}
-		
-		for(int i = 0; i < missiles.size(); i++) {
-			missiles.get(i).update2();
-		}
 		
 
 		if(y != 0)

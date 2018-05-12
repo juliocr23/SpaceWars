@@ -23,6 +23,19 @@ public class MissileController {
 		}
 	}
 	
+	public void update2() {
+		
+		for(int i = 0; i < b.size(); i++) {
+			TempMissile = b.get(i);
+			
+			if(TempMissile.getY() <= 0) {
+				removeMissile(TempMissile);
+			}
+			
+			TempMissile.update2();
+		}
+	}
+	
 	public void addMissile(Missile missile) { b.add(missile); }
 	public void removeMissile(Missile missile) { b.remove(missile); }
 	

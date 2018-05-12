@@ -22,6 +22,7 @@ public class Level1State extends GameState {
 	
 	MissileController leftMissile;
 	MissileController rightMissile;
+	MissileController enemyMissile;
 	
 	public Level1State(GameStateManager gsm) {
 		this.gsm = gsm;
@@ -41,6 +42,7 @@ public class Level1State extends GameState {
 		
 		leftMissile = new MissileController();
 		rightMissile = new MissileController();
+		enemyMissile = new MissileController();
 		
 		player = new Player(120, 200);
 		enemy = new Enemy[1];
@@ -69,11 +71,14 @@ public class Level1State extends GameState {
 		
 		player.update();
 		
-		if(isCollidingWithMissile() != false) {
+		if(isEnemyCollidingWithMissile() != false) {
 			//enemy[i].explode();
-			System.out.println("is hit with missle");
+			System.out.println("Enemy is hit with missle");
 		}
 		
+		if(isPlayerCollidingWithProjectiles() != false) {
+			System.out.println("Player is hit with missle");
+		}
 		
 		if(isCollidingWithPlayer()) {
 			//player.die();
@@ -83,15 +88,29 @@ public class Level1State extends GameState {
 		leftMissile.update();
 		rightMissile.update();
 		
+		
+		
 		bg.update();
 		if(bg1.y >= 250) bg1.setPosition(0, -1500);
 		bg1.update();
+		
 		
 		for(int i = 0; i<enemy.length; i++) {
 			enemy[i].moveTowards(player);
 			
 			enemy[i].update();
 		}
+		
+		
+		
+		for(int i = 0; i < enemy.length; i++) {
+			if(enemy[i].isShooting()) {
+				enemyMissile.addMissile(new Missile(enemy[i].x+25,enemy[i].y+20));
+			}
+			
+		}
+		
+		enemyMissile.update2();
 	}
 
 
@@ -105,27 +124,38 @@ public class Level1State extends GameState {
 		rightMissile.draw(g);
 		
 		for(int i = 0; i<enemy.length; i++) {
-			
-			
 			enemy[i].draw(g);
 		}
+		
+		enemyMissile.draw(g);
 	}
 	
+	
 	public boolean isCollidingWithPlayer() {
-		boolean flag = false;
 		
 		for(int i = 0; i<enemy.length; i++) {
 			if(enemy[i].getBounds().intersects(player.getBounds())) {
-				flag = true;
-				break;
+				return true;
 			}
 		}
 		
-		return flag;
+		return false;
+	}
+	
+	public boolean isPlayerCollidingWithProjectiles() {
+		
+		for(int i = 0; i < enemyMissile.b.size(); i++) {
+			if(enemyMissile.b.get(i).getBounds().intersects(player.getBounds())) {
+				enemyMissile.b.remove(i);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	
-	public boolean isCollidingWithMissile() {
+	public boolean isEnemyCollidingWithMissile() {
 		
 		boolean isColliding = false;
 		
