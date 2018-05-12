@@ -17,7 +17,8 @@ import Entity.Player;
 public class Level1State extends GameState {
 	
 	private Background bg;
-	private Background bg1;
+	private Background bg2;
+	private Background clouds;
 	
 	private Player player;
 	public ArrayList<Enemy> enemy = new ArrayList<Enemy>();
@@ -35,12 +36,18 @@ public class Level1State extends GameState {
 	public void init() {
 			
 		bg = new Background("/Background/mapbg1.jpg", 1);
-		bg1 = new Background("/Background/clouds.png", 1);
-
-		bg.setPosition(0, -1215);
-		bg.setVector(0, 0.1);
-		bg1.setPosition(0, -1377);
-		bg1.setVector(0, 0.5);
+		bg2 = new Background("/Background/mapbg3.jpeg", 1);
+		//bg = new Background("/Background/example.jpg", 1);
+		//bg2 = new Background("/Background/example.jpg", 1);
+		clouds = new Background("/Background/clouds.png", 1);
+		
+		int screenOffset = 300;
+		bg.setPosition(0, -1517 + screenOffset);
+		bg.setVector(0, 3);
+		bg2.setPosition(0, -3034 + screenOffset);
+		bg2.setVector(0, 3);
+		clouds.setPosition(0, -1377);
+		clouds.setVector(0, 0.5);
 		
 		leftMissile = new MissileController();
 		rightMissile = new MissileController();
@@ -101,8 +108,11 @@ public class Level1State extends GameState {
 		
 		
 		bg.update();
-		if(bg1.y >= 300) bg1.setPosition(0, -1500);
-		bg1.update();
+		bg2.update();
+		if(clouds.y >= 300) clouds.setPosition(0, -1500);
+		clouds.update();
+		if(bg.y >= 300) bg.setPosition(0, -2734);
+		if(bg2.y >= 300) bg2.setPosition(0, -2734);
 		
 		
 		for(int i = 0; i < enemy.size(); i++) {
@@ -127,7 +137,8 @@ public class Level1State extends GameState {
 	@Override
 	public void draw(Graphics g) {
 		bg.draw(g);
-		bg1.draw(g);
+		bg2.draw(g);
+		clouds.draw(g);
 		player.draw(g);
 		
 		leftMissile.draw(g);
