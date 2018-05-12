@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import Main.Background;
 import Entity.Enemy;
@@ -19,7 +20,7 @@ public class Level1State extends GameState {
 	private Background bg1;
 	
 	private Player player;
-	private Enemy enemy[];
+	public ArrayList<Enemy> enemy = new ArrayList<Enemy>();
 	
 	MissileController leftMissile;
 	MissileController rightMissile;
@@ -46,12 +47,11 @@ public class Level1State extends GameState {
 		enemyMissile = new MissileController();
 		
 		player = new Player(140, 260);
-		enemy = new Enemy[1];
+		enemy = new ArrayList<Enemy>();
+		
+		enemy.add(new Enemy(20 + 50, - 100));
 		//tEnemy = new Enemy(200, -50);
 		
-		for(int i= 0; i<enemy.length; i++) {
-			enemy[i] = new Enemy(20 + 50 * i, -100);
-		}
 	}
 		
 	@Override
@@ -105,17 +105,17 @@ public class Level1State extends GameState {
 		bg1.update();
 		
 		
-		for(int i = 0; i<enemy.length; i++) {
-			enemy[i].moveTowards(player);
+		for(int i = 0; i < enemy.size(); i++) {
+			enemy.get(i).moveTowards(player);
 			
-			enemy[i].update();
+			enemy.get(i).update();
 		}
 		
 		
 		
-		for(int i = 0; i < enemy.length; i++) {
-			if(enemy[i].isShooting()) {
-				enemyMissile.addMissile(new Missile(enemy[i].x+25,enemy[i].y+20));
+		for(int i = 0; i < enemy.size(); i++) {
+			if(enemy.get(i).isShooting()) {
+				enemyMissile.addMissile(new Missile(enemy.get(i).x+25,enemy.get(i).y+20));
 			}
 			
 		}
@@ -133,8 +133,8 @@ public class Level1State extends GameState {
 		leftMissile.draw(g);
 		rightMissile.draw(g);
 		
-		for(int i = 0; i<enemy.length; i++) {
-			enemy[i].draw(g);
+		for(int i = 0; i<enemy.size(); i++) {
+			enemy.get(i).draw(g);
 		}
 		
 		enemyMissile.draw(g);
@@ -156,8 +156,8 @@ public class Level1State extends GameState {
 	public boolean isCollidingWithPlayer() {
 		
 		if(!player.isFlinching()) {
-			for(int i = 0; i<enemy.length; i++) {
-				if(enemy[i].getBounds().intersects(player.getBounds())) {
+			for(int i = 0; i<enemy.size(); i++) {
+				if(enemy.get(i).getBounds().intersects(player.getBounds())) {
 					return true;
 				}
 			}
@@ -186,19 +186,24 @@ public class Level1State extends GameState {
 		boolean isColliding = false;
 		
 		
-			for(int i = 0; i < enemy.length; i++) {
+			for(int i = 0; i < enemy.size(); i++) {
 				for(int j = 0; j < leftMissile.b.size(); j++) {
-						if(leftMissile.b.get(j).getBounds().intersects(enemy[i].getBounds())) {
+						if(leftMissile.b.get(j).getBounds().intersects(enemy.get(i).getBounds())) {
 							isColliding = true;
+							enemy.get(i).hit(1);
 							leftMissile.b.remove(j);
 							
 						}
 				}
 				for(int j = 0; j < rightMissile.b.size(); j++) {
-					if(rightMissile.b.get(j).getBounds().intersects(enemy[i].getBounds())) {
+					if(rightMissile.b.get(j).getBounds().intersects(enemy.get(i).getBounds())) {
 						isColliding = true;
+						enemy.get(i).hit(1);
 						rightMissile.b.remove(j);
 					}
+				}
+				if(enemy.get(i).isDead()) {
+					enemy.remove(i);
 				}
 			}
 		

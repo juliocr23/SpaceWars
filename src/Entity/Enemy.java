@@ -1,5 +1,6 @@
 package Entity;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -12,8 +13,8 @@ public class Enemy {
 
     private BufferedImage enemy;
     private BufferedImage projectile;
-    
-    public ArrayList<Missile> missiles;
+    private boolean dead = false;
+    private int health = 5;
 	
 	public double x, y;
 	private int A;
@@ -22,8 +23,6 @@ public class Enemy {
 	private boolean shoot;
 
 	public Enemy(double x, double y) {
-
-		missiles = new ArrayList<Missile>();
 		
 		try {
 			enemy = ImageIO.read(getClass().getResourceAsStream("/Enemies/alien1.png"));
@@ -41,6 +40,18 @@ public class Enemy {
 	public Rectangle getBounds() {
 
 		return new Rectangle((int)x, (int)y, 50, 80);
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public void hit(int damage) {
+		
+		health -= damage;
+		if(health < 0) health = 0;
+		if(health == 0) dead = true;
+		
 	}
 	
 	public void moveTowards(Player player) {
@@ -93,6 +104,8 @@ public class Enemy {
 
 	}
 	
+	public boolean isDead() { return dead; }
+	
 	public boolean isShooting() {
 		
 		if(Timer <= -1) {
@@ -124,9 +137,13 @@ public class Enemy {
 		//g.drawRect((int)x, (int)y, 50, 80);
 		g.drawImage(enemy, (int)x, (int)y, 50, 100, null);
 		
-		for(int i = 0; i < missiles.size(); i++) {
-			missiles.get(i).draw(g);
-		}
+		g.setColor(Color.BLACK);
+		g.fillRect((int)x + (enemy.getWidth()/4), (int)y + (enemy.getHeight()/3), 20, 3);
+		g.setColor(Color.RED);
+		g.fillRect((int)x + (enemy.getWidth()/4), (int)y + (enemy.getHeight()/3), health * 4, 3);
+		g.setColor(Color.BLACK);
+		g.drawRect((int)x + (enemy.getWidth()/4), (int)y + (enemy.getHeight()/3), 20, 3);
+		
 
 	}
 	
