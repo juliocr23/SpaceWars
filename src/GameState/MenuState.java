@@ -23,9 +23,15 @@ public class MenuState extends GameState {
 		
 		this.gsm = gsm;
 		
+		init();
+	}
+
+	@Override
+	public void init() {
+		
 		try {
 			
-			//bg = new Background("/Background/earth.gif", 1);
+			bg = new Background("/Background/menubg.jpg", 1);
 			
 			titleColor = new Color(255, 0, 0);
 			titleFont = new Font("Century Gothic", Font.BOLD, 28);
@@ -35,30 +41,27 @@ public class MenuState extends GameState {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
+		
+		bg.setPosition(0, 30);
 		
 	}
 
 	@Override
 	public void update() {
 		
-		//bg.update();
+		bg.update();
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		
 		// draw bg
-		//bg.draw(g);
+		bg.draw(g);
 		
 		// draw title
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("Zero Fighter", 80, 40);
+		g.drawString("Zero Fighter", 80, 70);
 		
 		// draw menu options
 		g.setFont(font);
@@ -69,7 +72,7 @@ public class MenuState extends GameState {
 			else {
 				g.setColor(Color.GRAY);
 			}
-			g.drawString(options[i], 145, 160 + i * 15);
+			g.drawString(options[i], 145, 200 + i * 15);
 		}
 	}
 	

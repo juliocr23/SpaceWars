@@ -18,7 +18,6 @@ public class Level1State extends GameState {
 	
 	private Player player;
 	private Enemy enemy[];
-	private int counter = 5;
 	
 	MissileController leftMissile;
 	MissileController rightMissile;
@@ -35,7 +34,7 @@ public class Level1State extends GameState {
 		bg = new Background("/Background/mapbg1.jpg", 1);
 		bg1 = new Background("/Background/clouds.png", 1);
 
-		bg.setPosition(0, -1227);
+		bg.setPosition(0, -1215);
 		bg.setVector(0, 0.15);
 		bg1.setPosition(0, -1377);
 		bg1.setVector(0, 0.5);
@@ -44,7 +43,7 @@ public class Level1State extends GameState {
 		rightMissile = new MissileController();
 		enemyMissile = new MissileController();
 		
-		player = new Player(120, 200);
+		player = new Player(140, 260);
 		enemy = new Enemy[1];
 		//tEnemy = new Enemy(200, -50);
 		
@@ -56,12 +55,12 @@ public class Level1State extends GameState {
 	@Override
 	public void update() {
 		
-		if(player.x <= 0) {
-			player.setPosition(0, player.y);
-		}if(player.x >= 290) {
-			player.setPosition(290, player.y);
-		}if(player.y >= 215) {
-			player.setPosition(player.x, 215);
+		if(player.x <= -2) {
+			player.setPosition(-2, player.y);
+		}if(player.x >= 292) {
+			player.setPosition(292, player.y);
+		}if(player.y >= 275) {
+			player.setPosition(player.x, 275);
 		}if(player.y <= 0) {
 			player.setPosition(player.x, 0);
 		}
