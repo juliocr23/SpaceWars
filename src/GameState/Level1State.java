@@ -1,5 +1,7 @@
 package GameState;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import java.awt.event.KeyEvent;
@@ -35,7 +37,7 @@ public class Level1State extends GameState {
 		bg1 = new Background("/Background/clouds.png", 1);
 
 		bg.setPosition(0, -1215);
-		bg.setVector(0, 0.15);
+		bg.setVector(0, 0.1);
 		bg1.setPosition(0, -1377);
 		bg1.setVector(0, 0.5);
 		
@@ -76,12 +78,21 @@ public class Level1State extends GameState {
 		}
 		
 		if(isPlayerCollidingWithProjectiles() != false) {
-			System.out.println("Player is hit with missle");
+			if(!player.isFlinching() && !player.isDead()) {
+				System.out.println("player is hit with missiles");
+				player.hit(1);
+			}
 		}
 		
 		if(isCollidingWithPlayer()) {
-			//player.die();
-			System.out.println("is dead");
+			if(!player.isFlinching() && !player.isDead()) {
+				System.out.println("player is hit");
+				player.hit(1);
+			}
+		}
+		
+		if(player.isDead()) {
+			System.out.println("Player is dead");
 		}
 		
 		leftMissile.update();
@@ -90,7 +101,7 @@ public class Level1State extends GameState {
 		
 		
 		bg.update();
-		if(bg1.y >= 250) bg1.setPosition(0, -1500);
+		if(bg1.y >= 300) bg1.setPosition(0, -1500);
 		bg1.update();
 		
 		
@@ -127,14 +138,28 @@ public class Level1State extends GameState {
 		}
 		
 		enemyMissile.draw(g);
+		
+		
+		g.setColor(Color.GREEN);
+		g.setFont(new Font("Comic Sans", Font.BOLD, 5));
+		g.drawString("HP :", 255, 280);
+		
+		g.setColor(Color.GRAY);
+		g.fillRect(265, 275, 50, 5);
+		g.setColor(Color.GREEN);
+		g.fillRect(265, 275, player.getHealth() * 10, 5);
+		g.setColor(Color.BLACK);
+		g.drawRect(265, 275, 50, 5);
 	}
 	
 	
 	public boolean isCollidingWithPlayer() {
 		
-		for(int i = 0; i<enemy.length; i++) {
-			if(enemy[i].getBounds().intersects(player.getBounds())) {
-				return true;
+		if(!player.isFlinching()) {
+			for(int i = 0; i<enemy.length; i++) {
+				if(enemy[i].getBounds().intersects(player.getBounds())) {
+					return true;
+				}
 			}
 		}
 		
@@ -143,10 +168,12 @@ public class Level1State extends GameState {
 	
 	public boolean isPlayerCollidingWithProjectiles() {
 		
-		for(int i = 0; i < enemyMissile.b.size(); i++) {
-			if(enemyMissile.b.get(i).getBounds().intersects(player.getBounds())) {
-				enemyMissile.b.remove(i);
-				return true;
+		if(!player.isFlinching()) {
+			for(int i = 0; i < enemyMissile.b.size(); i++) {
+				if(enemyMissile.b.get(i).getBounds().intersects(player.getBounds())) {
+					enemyMissile.b.remove(i);
+					return true;
+				}
 			}
 		}
 		

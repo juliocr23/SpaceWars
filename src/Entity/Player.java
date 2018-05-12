@@ -21,6 +21,11 @@ public class Player {
 	public double x;
 	public double y;
 	
+	private int health = 5;
+	private boolean flinching;
+	private boolean dead = false;
+	private long flinchTimer;
+	
 	private boolean moveLeft;
 	private boolean moveRight;
 	private boolean moveUp;
@@ -50,10 +55,25 @@ public class Player {
 	public void moveRight(boolean b) { moveRight = b; }
 	public void moveUp(boolean b)  { moveUp = b; }
 	public void moveDown(boolean b) {moveDown = b; }
+	public boolean isDead() { return dead; }
+	public boolean isFlinching() { return flinching; }
 	
 	public void setPosition(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public void hit(int damage) {
+		if(flinching) return;
+		health -= damage;
+		if(health < 0) health = 0;
+		if(health == 0) dead = true;
+		flinching = true;
+		flinchTimer = System.nanoTime();
 	}
 	
 	public void update() {
@@ -63,12 +83,27 @@ public class Player {
 		if(moveUp) y -= 4;
 		if(moveDown) y += 4;
 		
+		// check done flinching
+		if(flinching) {
+			long elapsed = (System.nanoTime() - flinchTimer) / 1000000;
+				if(elapsed > 2000) flinching = false;
+		}
+		
 	}
 	 
 	public void draw(Graphics g) {
 		
+		// draw player
+		if(!isDead()) {
+			if(flinching) {
+				long elapsed = (System.nanoTime() - flinchTimer) / 1000000;
+					if(elapsed / 100 % 2 == 0) return;
+			}
+		}
+		
+		
 		g.drawImage(player, (int)x, (int)y, player.getWidth(),player.getHeight(), null);
-		g.drawRect((int)x, (int)y, player.getWidth(), player.getHeight());
+		//g.drawRect((int)x, (int)y, player.getWidth(), player.getHeight());
 
 		
 	}
